@@ -11,7 +11,6 @@ public class SomeKindOfPosition {
     private int id;
     private double netOpenPositionLimit;
     private Map<LocalDate, Double> utilizedNetOpenPosition = new HashMap<>();
-    private Map<LocalDate, Double> valueDateToUtilizationPercentage = new HashMap<>();
     private Map<LocalDate, SomeLimitPosition> position = new HashMap<>();
     private TreeSet<LocalDate> valueDates = new TreeSet<>();
 
@@ -40,13 +39,13 @@ public class SomeKindOfPosition {
     }
 
     public double getUtilizedPercentage(LocalDate date) {
-        return valueDateToUtilizationPercentage.containsKey(date) ? valueDateToUtilizationPercentage.get(date) : 0.0;
+        double utilization = getUtilizedNetOpenPosition(date);
+        return calculateUtilizationPercentage(utilization);
     }
 
     public void setUtilizedNetOpenPosition(LocalDate date, double utilizedNOPCredit) {
         valueDates.add(date);
         this.utilizedNetOpenPosition.put(date, utilizedNOPCredit);
-        this.valueDateToUtilizationPercentage.put(date, calculateUtilizationPercentage(utilizedNOPCredit));
     }
 
     public void addSomeLimitPosition(LocalDate date, SomeLimitPosition position) {
